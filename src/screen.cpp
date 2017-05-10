@@ -36,7 +36,7 @@ void screen_refresh() {
 	for (int y = YMAX - 1; 0 <= y; y--) {
 		for (int x = 0; x < XMAX; x++)
 			cout << screen[x][y];
-		cout << ('\n');
+		cout << endl;
 
 	}
 }
