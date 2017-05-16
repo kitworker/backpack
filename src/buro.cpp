@@ -3,13 +3,13 @@
 // Author      : Kasianov
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : buro in C++, Ansi-style
 //============================================================================
 
 #include <vector>
 using namespace std;
 
-#include "turtuse.h"
+#include "buro.h"
 
 
 
@@ -34,60 +34,86 @@ char int2char(int i){
 
 }
 
-const int n = 3, m = 4;
 
-void prints (string dir, int val, int x, int y ){
-	cout << dir << "[" <<  val << "]"  << " x = " << x << " y= " << y <<  endl;
-	point pos = point( x,m - y)*point(2, 2) ;
-	new rectangle(pos , pos, int2char(val) );
-	shape_refresh();
+/*
+ * wts - массив весов,
+	cost - массив стоимостей предметов,
+	W - вместимость рюкзака
+	функция возвращает максимальную стоимость, которую можно набрать(решение задачи о рюкзаке
+	с повторениями)
+	массив dp собственно реализует динамическое программирование, описанное в статье, как K_w
+ *
+ */
+
+int cnt = 0;
+
+int knapsack1(const std::vector<int>& _wts_arrVes, const std::vector<int>& arrCost, int Wmestimost)
+{
+	size_t n = _wts_arrVes.size();							 //  _wts_arrVes - массив весов,
+	std::vector<int> dp(Wmestimost + 1);
+	dp[0] = 0;
+	for (int wmest = 1, x = 1; wmest <= Wmestimost; wmest++ , ++x)		 // Wmestimost - вместимость рюкзака
+	{
+		point shift(6,4);
+		dp[wmest] = dp[wmest-1];               				 // смотрим
+		for (size_t i = 0, y = 0; i < n; i++, ++y)   // arrCost - массив стоимостей
+		{
+
+			point pos(x, y);
+			pos = pos * shift;
+			if (_wts_arrVes[i] <= wmest)
+			{
+				dp[wmest] = std::max(dp[wmest], dp[wmest - _wts_arrVes[i]] + arrCost[i]);
+				point del1(1,0);
+				shape * spd =  new rectangle( pos,   pos, int2char(dp[wmest]));
+				shape * star =new rectangle( pos + del1,  pos + point(1,1), '*');
+				stackWE(spd, star);
+			}
+
+//			point del(1,1);
+//			new rectangle( pos + del,  pos + del , int2char(cnt++));
+//
+//
+////			point del(3,3);
+////			new rectangle( pos + del,  pos + del , int2char(cnt++));
+//
+//
+//
+//			new rectangle( pos,   pos, int2char(dp[wmest]));
+//			point del1(1,0);
+//			new rectangle( pos + del1,   pos + del1, '*');
+
+
+			cout << "w= " << wmest << " dp[w] = " << dp[wmest] << endl;
+
+			shape_refresh();
+			shape_refresh();
+
+		} // for ...
+	}
+
+
+
+	return dp[Wmestimost];
 }
-
 
 int main() {
+	vector<int>  arrVes; // ves
+	arrVes.push_back(2);
+	arrVes.push_back(2);
+	arrVes.push_back(2);
+
+	vector<int> arrCost;	 // cost - массив стоимостей
+	arrCost.push_back(1);
+	arrCost.push_back(2);
+	arrCost.push_back(3);
+
+	int Wmest = 4;		// W - вместимость рюкзака
 
 
+	int del =  knapsack1(arrVes, arrCost, Wmest);
 
-    int map[n][m] =
-    {
-        { 1, 8, 3, 4},
-        { 2, 7, 5, 6},
-        { 0, 10, 1, 6}
-    };
+	cout << del;
 
-    int j = 0, i = n - 1;
-	while (i > 0 || j < m) {
-		if (i == 0 && j == m - 1)
-			break;
-		// Up Right
-		if (i > 0) {
-			if (map[i - 1][j] >= map[i][j + 1]) {
-				prints(" Up ", map[i - 1][j], j, i - 1);
-				i--;
-				continue;
-			}
-		} else {
-			prints(" Right ", map[i][j + 1], j + 1, i);
-			j++;
-			continue;
-		};
-
-		// Right Up
-		if (j != m - 1) {
-			if (map[i - 1][j] <= map[i][j + 1]) {
-				prints(" Right ", map[i][j + 1], j + 1, i);
-				j++;
-				continue;
-			}
-		} else {
-			prints(" Up ", map[i - 1][j], j, i - 1);
-			i--;
-			continue;
-		};
-	};
+	return 0;
 }
-
-
-
-
-
