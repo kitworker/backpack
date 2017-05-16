@@ -3,7 +3,7 @@
 // Author      : Kasianov
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : buro in C++, Ansi-style
 //============================================================================
 
 #include <vector>
@@ -21,10 +21,13 @@ char int2char(int i){
 		case 2: return '2'; break;
 		case 3: return '3'; break;
 		case 4: return '4'; break;
-		case 5: return '6'; break;
-		case 6: return '7'; break;
-		case 7: return '8'; break;
-		case 8: return '9'; break;
+		case 5: return '5'; break;
+		case 6: return '6'; break;
+		case 7: return '7'; break;
+		case 8: return '8'; break;
+		case 9: return '9'; break;
+		case 10: return 'a'; break;
+
 
 		default: return '?';
 	}
@@ -42,6 +45,8 @@ char int2char(int i){
  *
  */
 
+int cnt = 0;
+
 int knapsack1(const std::vector<int>& _wts_arrVes, const std::vector<int>& arrCost, int Wmestimost)
 {
 	size_t n = _wts_arrVes.size();							 //  _wts_arrVes - массив весов,
@@ -49,29 +54,42 @@ int knapsack1(const std::vector<int>& _wts_arrVes, const std::vector<int>& arrCo
 	dp[0] = 0;
 	for (int wmest = 1, x = 1; wmest <= Wmestimost; wmest++ , ++x)		 // Wmestimost - вместимость рюкзака
 	{
-		point shift(6,2);
+		point shift(6,4);
 		dp[wmest] = dp[wmest-1];               				 // смотрим
 		for (size_t i = 0, y = 0; i < n; i++, ++y)   // arrCost - массив стоимостей
 		{
-			int delt = 1;
-			point pos(x+delt, y+delt);
+
+			point pos(x, y);
 			pos = pos * shift;
 			if (_wts_arrVes[i] <= wmest)
 			{
 				dp[wmest] = std::max(dp[wmest], dp[wmest - _wts_arrVes[i]] + arrCost[i]);
-				point del(1,1);
-//				new rectangle( pos + del,  pos + del , int2char(dp[wmest]));
+				point del1(1,0);
+				shape * spd =  new rectangle( pos,   pos, int2char(dp[wmest]));
+				shape * star =new rectangle( pos + del1,  pos + point(1,1), '*');
+				stackWE(spd, star);
 			}
-			new rectangle( pos,   pos, int2char(dp[wmest]));
+
+//			point del(1,1);
+//			new rectangle( pos + del,  pos + del , int2char(cnt++));
+//
+//
+////			point del(3,3);
+////			new rectangle( pos + del,  pos + del , int2char(cnt++));
+//
+//
+//
+//			new rectangle( pos,   pos, int2char(dp[wmest]));
+//			point del1(1,0);
+//			new rectangle( pos + del1,   pos + del1, '*');
+
 
 			cout << "w= " << wmest << " dp[w] = " << dp[wmest] << endl;
 
+			shape_refresh();
+			shape_refresh();
 
-		//	new rectangle( pos,  pos, int2char(w));
-//			shift = pos;
-			 shape_refresh();
-
-		}
+		} // for ...
 	}
 
 
@@ -90,7 +108,7 @@ int main() {
 	arrCost.push_back(2);
 	arrCost.push_back(3);
 
-	int Wmest = 6;		// W - вместимость рюкзака
+	int Wmest = 4;		// W - вместимость рюкзака
 
 
 	int del =  knapsack1(arrVes, arrCost, Wmest);

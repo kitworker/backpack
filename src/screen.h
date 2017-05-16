@@ -2,7 +2,7 @@
 #define SCREEN_H
 // file screen.h
 
-const int XMAX = 60, YMAX = 60;
+const int XMAX = 40, YMAX = 10;
 
 struct point {
     int x, y;
